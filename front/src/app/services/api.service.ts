@@ -9,7 +9,17 @@ import { environment } from '../../environments/environments';
 })
 
 export class ApiService {
-  private base = length;
+  private base = environment.BACKEND_URL;
 
-  constructor() { }
+  constructor(private http: HttpClient) {}
+
+  // GET /api/hello
+  getHello(): Observable<any> {
+    return this.http.get(`${this.base}/hello`);
+  }
+
+  // POST /api/echo
+  echo(payload: any): Observable<any> {
+    return this.http.post(`${this.base}/echo`, payload);
+  }
 }
