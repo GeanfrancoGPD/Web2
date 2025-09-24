@@ -1,6 +1,7 @@
 .bodyContiner {
   margin: 0;
   height: 100vh; /* ocupa todo el alto de la pantalla */
+  width: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -9,6 +10,9 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
+  position: relative; /* importante */
+  overflow: hidden;   /* evita scroll raro */
 }
 
 p{
@@ -34,6 +38,8 @@ a{
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   background-color: transparent;
   font-family: Arial, sans-serif;
+  opacity: 0;
+  animation: slideInRight 0.6s forwards; 
 }
 
 h2 {
@@ -78,4 +84,27 @@ button:hover {
 .error {
   color: red;
   text-align: center;
+}
+
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%); /* empieza fuera de la pantalla a la derecha */
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0); /* se coloca en su sitio */
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%); /* se va hacia la izquierda */
+    opacity: 0;
+  }
 }

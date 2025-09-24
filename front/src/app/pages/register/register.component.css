@@ -1,17 +1,53 @@
-.register-container {
+.bodyContiner {
+  margin: 0;
+  height: 100vh; /* ocupa todo el alto de la pantalla */
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  background-image: url("../../../assest/fondo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  position: relative; /* importante */
+  overflow: hidden;   /* evita scroll raro */
+}
+
+p{
+  color: white;
+}
+
+a{
+  color: greenyellow;
+}
+
+
+.register-container{
   max-width: 350px;
   margin: 100px auto;
+  margin-left: 40px; /* espacio desde el borde derecho */
+  height: 80vh;
+  display: flex;
+  justify-content:center;
+  flex-direction: column;
   padding: 2rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: transparent;
   font-family: Arial, sans-serif;
-  background-color: #fff;
+  opacity: 0;
+  animation: slideInLeft 0.6s forwards; 
 }
 
 h2 {
   text-align: center;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 8vh;
   margin-bottom: 2rem;
+  color: white;
 }
 
 form {
@@ -25,12 +61,14 @@ input {
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 1rem;
+  color: white;
+  background: transparent;
   
 }
 
 button {
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #100997;
   color: white;
   border: none;
   border-radius: 4px;
@@ -46,4 +84,27 @@ button:hover {
 .error {
   color: red;
   text-align: center;
+}
+
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%); /* se va hacia la izquierda */
+    opacity: 0;
+  }
 }

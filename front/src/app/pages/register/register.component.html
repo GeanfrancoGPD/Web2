@@ -1,12 +1,14 @@
-<div class="register-container">
-  <h2>Registro</h2>
-  <form (ngSubmit)="register()">
-    <input type="email" [(ngModel)]="gmail" name="gmail" placeholder="Correo" required />
-    <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
-    <button type="submit">Registrarse</button>
-    <p>
-        ¿Ya tienes cuenta? <a href="/">Inicia sesion</a>
-        <p>
-    <p *ngIf="error" class="error">{{ error }}</p>
-  </form>
+<div class="bodyContiner">
+  <div class="register-container">
+    <h2>Registro</h2>
+    <form (ngSubmit)="register()">
+      <input type="email" [(ngModel)]="gmail" name="gmail" placeholder="Correo" required />
+      <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
+      <button type="submit">Registrarse</button>
+      <p>
+          ¿Ya tienes cuenta? <a href="/">Inicia sesion</a>
+          <p>
+      <p *ngIf="error" class="error">{{ error }}</p>
+    </form>
+  </div>
 </div>

@@ -1,8 +1,8 @@
 <div class="bodyContiner">
-    <div class="login-container">
+    <div class="login-container" [@routeAnimation]>
       <h2>Iniciar sesión</h2>
       <form (ngSubmit)="login()">
-        <input type="email" [(ngModel)]="gmail" name="gmail" placeholder="Correo" required />
+        <input type="email" [(ngModel)]="name" name="name" placeholder="Correo" required />
         <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
         <button type="submit">Entrar</button>
         <p>
