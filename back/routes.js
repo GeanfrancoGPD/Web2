@@ -2,9 +2,6 @@ import { SERVER_URL } from './config.js';
 import bcrypt from 'bcrypt';
 
 export const createRoutes = async (app) => {
-  let info = {
-    infoUsers: [],
-  };
 
   app.get('/', (req, res) => {
     res.send('API is running');
