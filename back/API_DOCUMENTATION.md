@@ -27,14 +27,24 @@ Autentica a un usuario y crea una sesión.
 - **Método:** `GET`
 - **Entrada:**
   - **Cabeceras (Headers):**
-    - `data`: Un string JSON con las credenciales del usuario.
+    Un string JSON con las credenciales del usuario.
+    - `data`: 
       ```json
       {
         "username": "nombre_de_usuario",
         "password": "tu_contraseña"
       }
       ```
-- **Salida (Éxito):**
+
+  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
+  - `data`: ```{
+    "username": "Wisso124214",
+    "password": "QWEqwe123·",
+  }```
+
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -42,7 +52,8 @@ Autentica a un usuario y crea una sesión.
       "message": "Bienvenido nombre_de_usuario"
     }
     ```
-- **Salida (Advertencia - Sesión existente):**
+
+- **Salida (ADVERTENCIA - Sesión existente):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -51,7 +62,8 @@ Autentica a un usuario y crea una sesión.
       "redirect": "/home"
     }
     ```
-- **Salida (Errores):**
+
+- **Salida (ERRORES):** **---------------------------------**
   - **Código:** `401 Unauthorized` (Credenciales inválidas)
     ```json
     {
@@ -84,7 +96,8 @@ Registra un nuevo usuario en el sistema.
 - **Método:** `POST`
 - **Entrada:**
   - **Cabeceras (Headers):**
-    - `data`: Un string JSON con los datos del nuevo usuario.
+    Un string JSON con los datos del nuevo usuario.
+    - `data`: 
       ```json
       {
         "username": "nuevo_usuario",
@@ -93,7 +106,18 @@ Registra un nuevo usuario en el sistema.
         "confirmPassword": "tu_contraseña"
       }
       ```
-- **Salida (Éxito):**
+
+  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
+  - `data`: ```{
+    "username": "user123",
+    "email": "luisdavidbustosnunez@gmail.com",
+    "password": "QWEqwe123·",
+    "confirmPassword": "QWEqwe123·"
+  }```
+
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:** El cuerpo de la respuesta contiene un mensaje que a su vez es un objeto JSON anidado como string, indicando que el inicio de sesión posterior al registro fue exitoso.
     ```json
@@ -101,7 +125,8 @@ Registra un nuevo usuario en el sistema.
       "message": "{\"message\":\"Bienvenido nuevo_usuario\"}"
     }
     ```
-- **Salida (Errores):**
+
+- **Salida (ERRORES):** **---------------------------------**
   - **Código:** `400 Bad Request` (Campos faltantes o inválidos). El mensaje de error varía según el campo.
     ```json
     {
@@ -140,7 +165,9 @@ Cierra la sesión del usuario actual.
 - **URL:** `/logout`
 - **Método:** `GET`
 - **Entrada:** Ninguna (la sesión se identifica a través de la cookie de sesión).
-- **Salida (Éxito):**
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -148,7 +175,8 @@ Cierra la sesión del usuario actual.
       "message": "Cerrar sesión"
     }
     ```
-- **Salida (Advertencia - Sin sesión):**
+
+- **Salida (ADVERTENCIA - Sin sesión):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -157,7 +185,8 @@ Cierra la sesión del usuario actual.
       "redirect": "/login"
     }
     ```
-- **Salida (Error):**
+
+- **Salida (ERROR):** **---------------------------------**
   - **Código:** `500 Internal Server Error`
     ```json
     {
@@ -175,7 +204,9 @@ Página protegida que requiere una sesión activa.
 - **URL:** `/home`
 - **Método:** `GET`
 - **Entrada:** Ninguna (la sesión se identifica a través de la cookie de sesión).
-- **Salida (Éxito):**
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -186,7 +217,8 @@ Página protegida que requiere una sesión activa.
       }
     }
     ```
-- **Salida (Error - Sin sesión):**
+
+- **Salida (ERROR - Sin sesión):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -212,7 +244,15 @@ Inicia el proceso de recuperación de contraseña para un usuario.
         "email": "correo@ejemplo.com"
       }
       ```
-- **Salida (Éxito):**
+      
+  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
+  - `data`: ```{
+    "email": "luisdavidbustosnunez@gmail.com",
+  }```
+
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -220,7 +260,8 @@ Inicia el proceso de recuperación de contraseña para un usuario.
       "message": "Se ha emulado el envío del email de recuperación"
     }
     ```
-- **Salida (Errores):**
+
+- **Salida (ERRORES):** **---------------------------------**
   - **Código:** `400 Bad Request` (Email no proporcionado o inválido).
     ```json
     {
@@ -256,13 +297,24 @@ Restablece la contraseña de un usuario utilizando un token de recuperación.
     - `data`: Un string JSON con el token, la nueva contraseña y el ID del usuario.
       ```json
       {
+        "userId": "id_del_usuario",
         "token": "token_de_recuperacion",
         "password": "nueva_contraseña",
         "confirmPassword": "nueva_contraseña",
-        "userId": "id_del_usuario"
       }
       ```
-- **Salida (Éxito):**
+
+      
+  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
+  - `data`: ```{
+    "userId":"68d29510ae0ee799136de05d",
+    "password":"QWEqwe123·",
+    "confirmPassword":"QWEqwe123·",
+    "token":"...",  (requiere un token válido)
+  }```
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -271,7 +323,7 @@ Restablece la contraseña de un usuario utilizando un token de recuperación.
       "redirect": "/login"
     }
     ```
-- **Salida (Errores):**
+- **Salida (ERRORES):** **---------------------------------**
   - **Código:** `400 Bad Request` (Campos faltantes, contraseñas no coinciden o token inválido).
     ```json
     {
@@ -301,10 +353,32 @@ Busca usuarios que coincidan con los criterios proporcionados.
       ```json
       {
         "username": "user",
-        "email": "ejemplo.com"
+        "..."
       }
+      ó
+      {
+        "email": "ejemplo.com",
+        "..."
+      }      
       ```
-- **Salida (Éxito):**
+
+**EJEMPLO FUNCIONAL  (debe enviarse como string)**
+  - `data`: ```{
+    "email": "luisdavidbustosnunez@gmail.com",
+  }```
+
+```COMENTARIO```
+  **Este método puede buscar cualquier propiedad de un usuario**
+  **Si por ejemplo un usuario posee un campo {"asd":"123"},**
+  **este método conseguirá la coincidencia y lo devolverá**
+
+```IMPORTANTE```
+  **Este endpoint NO devuelve únicamente los datos UN usuario**
+  **Devuelve los datos de todos los usuarios con esa coincidencia**
+
+
+
+- **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
   - **Cuerpo:**
     ```json
@@ -314,12 +388,14 @@ Busca usuarios que coincidan con los criterios proporcionados.
           "_id": "...",
           "username": "user123",
           "email": "test@ejemplo.com",
-          "password": "..."
+          "password": "...",
+          "..."
         }
       ]
     }
     ```
-- **Salida (Error):**
+    
+- **Salida (ERROR):** **---------------------------------**
   - **Código:** `400 Bad Request` (Sin criterios de búsqueda).
     ```json
     {

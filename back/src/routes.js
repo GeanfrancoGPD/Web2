@@ -146,10 +146,19 @@ export const createRoutes = async (app) => {
         }
         const user = data.users[0];
         const token = generateToken({ user, email: user.email, userId: user._id });
-        console.log(`Token de recuperación para ${user.email} de id ${user._id}: ${token}\n\nDescomentar la llamada a sendRecoveryEmail en src/routes.js para enviar el email.`);
         // sendRecoveryEmail(user.email, token);
-        // res.send({ message: 'Se ha enviado un email de recuperación' });
-        res.send({ message: 'Se ha emulado el envío del email de recuperación' });
+        // res.send({ 
+        //   message: 'Se ha enviado un email de recuperación',
+        //   userId: user._id,
+        //   email: user.email,
+        //   token,
+        // });
+        res.send({ 
+          message: 'Se ha emulado el envío del email de recuperación',
+          userId: user._id,
+          email: user.email,
+          token,
+        });
       } else {
         res.status(404).send({ errorCode: 404, message: 'Usuario no encontrado' });
       }
