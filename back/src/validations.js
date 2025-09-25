@@ -24,11 +24,10 @@ export const validateUsername = (value) => {
   return '';
 }
 
-export const validateEmail = () => {
+export const validateEmail = (email) => {
   // Chequear que el email tenga un formato válido
 
   const emailRegex = new RegExp('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}');
-  const email = document.getElementById('email').value;
 
   if (email && email.length > 0 && !emailRegex.test(email)) {
     return 'Email is not valid';
@@ -71,10 +70,10 @@ export const validatePassword = (text) => {
   return errorText;
 }
 
-export const validateConfirmPassword = (text) => {
+export const validateConfirmPassword = (pass, confirmPass) => {
   // Chequear que la contraseña de confirmación sea igual a la contraseña
 
-  if (text !== password) {
+  if (pass !== confirmPass) {
     return 'Passwords do not match';
   }
   return '';

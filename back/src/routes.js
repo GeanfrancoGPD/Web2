@@ -2,6 +2,8 @@ import { SERVER_URL } from '../config.js';
 import bcrypt from 'bcrypt';
 import { validateUsername, validateEmail, validatePassword, validateConfirmPassword } from './validations.js';
 import { createAndUpdateSession, destroySession, getSession, existSession } from '../utils/sessionManager.js';
+import { generateToken, verifyToken } from '../utils/tokenManager.js';
+import { sendRecoveryEmail } from '../utils/emailService.js';
 
 export const createRoutes = async (app) => {
 
@@ -97,24 +99,134 @@ export const createRoutes = async (app) => {
     });
   });
 
-  app.get('/logout', (req, res) => {
+  app.get('/logout', async (req, res) => {
     if (!existSession(req)) {
       res.send({ message: 'No has iniciado sesión.', redirect: '/login' });
       return;
     }
-    const result = destroySession(req);
+    const result = await destroySession(req);
     res.send(result);
   });
 
-  app.get('/home', (req, res) => {
+  app.get('/home', async (req, res) => {
     if (!existSession(req)) {
-          res.send({ message: 'Debes iniciar sesión para acceder a esta página.', redirect: '/login' });
-          return;
+      res.send({ message: 'Debes iniciar sesión para acceder a esta página.', redirect: '/login' });
+      return;
     }
 
     const sessionData = getSession(req);
     const message = `Bienvenido a la página principal, ${sessionData.username || 'invitado'}`;
     res.send({ message, sessionData });
     return;
+  });
+
+  app.get('/forgotPassword', async (req, res) => {
+    // Validar el email que viene en los headers
+    let userData = JSON.parse(req.headers.data || '{}');
+    const { email } = userData;
+    if (!email) {
+      return res.status(400).send({ errorCode: 400, message: 'Por favor ingrese su email' });
+    }
+    const emailError = validateEmail(email);
+    if (emailError) {
+      return res.status(400).send({ errorCode: 400, message: emailError });
+    }
+
+    // Busca el usuario con ese email usando la ruta /findUsers
+    await fetch(`${SERVER_URL}/findUsers`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', data: JSON.stringify({ email }) },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data?.users?.length > 0) {
+        // Si se encuentra el usuario, enviar un email con el token de recuperación
+        if (data.users.length > 1) {
+          return res.status(400).send({ errorCode: 400, message: 'Se han encontrado múltiples usuarios con ese email. Por favor contacte al soporte.' });
+        }
+        const user = data.users[0];
+        const token = generateToken({ user, email: user.email, userId: user._id });
+        console.log(`Token de recuperación para ${user.email} de id ${user._id}: ${token}\n\nDescomentar la llamada a sendRecoveryEmail en src/routes.js para enviar el email.`);
+        // sendRecoveryEmail(user.email, token);
+        // res.send({ message: 'Se ha enviado un email de recuperación' });
+        res.send({ message: 'Se ha emulado el envío del email de recuperación' });
+      } else {
+        res.status(404).send({ errorCode: 404, message: 'Usuario no encontrado' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al buscar usuario:', error);
+      res.status(500).send({ errorCode: 500, message: 'Error al buscar usuario' });
+    });
+  });
+
+  app.get('/resetPassword', async (req, res) => {
+    // Validar el token que viene en los headers
+    let userData = JSON.parse(req.headers.data || '{}');
+    const { token, password, confirmPassword, userId } = userData;
+    if (!token) {
+      return res.status(500).send({ errorCode: 500, message: 'Error del servidor al conseguir el token' });
+    }
+
+    if (!userId) {
+      return res.status(500).send({ errorCode: 500, message: 'Error del servidor al conseguir el id de usuario' });
+    }
+
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(400).send({ errorCode: 400, message: 'Token inválido o expirado. Por favor intente nuevamente' });
+    }
+
+    if (!password || !confirmPassword) {
+      return res.status(400).send({ errorCode: 400, message: 'Por favor llene todos los campos' });
+    }
+
+    const passwordError = validatePassword(password);
+    const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
+    if (passwordError) {
+      return res.status(400).send({ errorCode: 400, message: passwordError });
+    }
+    if (confirmPasswordError) {
+      return res.status(400).send({ errorCode: 400, message: confirmPasswordError });
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const updatedUser = { ...decoded.user, password: hashedPassword };
+
+    await fetch(`${SERVER_URL}/user/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedUser)
+    })
+    .then(response => response.json())
+    .then(data => {
+      res.send({ message: `Contraseña actualizada correctamente para el usuario . Por favor inicie sesión con su nueva contraseña.`, redirect: '/login' });
+    })
+    .catch(error => {
+      console.error('Error al actualizar la contraseña:', error);
+      res.status(500).send({ errorCode: 500, message: 'Error al actualizar la contraseña' });
+    });
+  });
+
+  app.get('/findUsers', async (req, res) => {
+    // Buscar coincidencias de usuarios que contengan por lo menos un dato igual de los que se envían a través de headers.data
+    const userData = JSON.parse(req.headers.data || '{}');
+    const keys = Object.keys(userData);
+    if (keys.length === 0) {
+      return res.status(400).send({ errorCode: 400, message: 'Por favor ingrese al menos un criterio de búsqueda' });
+    }
+    
+    await fetch(`${SERVER_URL}/users`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const users = data?.filter(u => u && (
+          keys.some(key => userData[key] && u[key] && u[key].includes(userData[key]))
+        ));
+      res.send({ users });
+    });
   });
 };
