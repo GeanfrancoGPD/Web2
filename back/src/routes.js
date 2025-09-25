@@ -1,5 +1,7 @@
 import { SERVER_URL } from '../config.js';
 import bcrypt from 'bcrypt';
+import { validateUsername, validateEmail, validatePassword, validateConfirmPassword } from './validations.js';
+import { createAndUpdateSession, destroySession, getSession, existSession } from '../utils/sessionManager.js';
 
 export const createRoutes = async (app) => {
 
@@ -8,6 +10,11 @@ export const createRoutes = async (app) => {
   });
 
   app.get('/login', async (req, res) => {
+
+    if (existSession(req, res)) {
+      return res.send({ message: `Ya has iniciado sesión. Cierra la sesión para continuar.`, redirect: '/home' });
+    }
+
     const userData = JSON.parse(req.headers.data || '{}');
 
     await fetch(`${SERVER_URL}/users`, {
@@ -20,7 +27,7 @@ export const createRoutes = async (app) => {
         if (user) {
           const passwordMatch = bcrypt.compareSync(userData.password, user.password);
           if (passwordMatch) {
-            req.session.data = { username: user.username, email: user.email };
+            createAndUpdateSession(req);
             return res.send({ message: `Bienvenido ${user.username}` });
           } else {
             return res.status(401).send({ errorCode: 401, message: 'Credenciales inválidas' });
@@ -32,17 +39,35 @@ export const createRoutes = async (app) => {
       console.error('Error fetching users:', error);
       return res.status(500).send({ errorCode: 500, message: 'Error del servidor' });
     });
-
-    req.session.data = userData;
   });
 
   app.post('/register', async (req, res) => {
-    const saltRounds = 10;
     let userData = JSON.parse(req.headers.data || '{}');
-    const password = userData.password;
-    if (!password) {
-      return res.status(400).send({ errorCode: 400, message: 'La contraseña es obligatoria' });
+    const { username, email, password, confirmPassword } = userData;
+
+    if (!username || !email || !password || !confirmPassword) {
+      return res.status(400).send({ errorCode: 400, message: 'Por favor llene todos los campos' });
     }
+
+    const usernameError = validateUsername(username);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+    const confirmPasswordError = validateConfirmPassword(password, confirmPassword);
+
+    if (usernameError) {
+      return res.status(400).send({ errorCode: 400, message: usernameError });
+    }
+    if (emailError) {
+      return res.status(400).send({ errorCode: 400, message: emailError });
+    }
+    if (passwordError) {
+      return res.status(400).send({ errorCode: 400, message: passwordError });
+    }
+    if (confirmPasswordError) {
+      return res.status(400).send({ errorCode: 400, message: confirmPasswordError });
+    }
+
+    const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     // Copia el resto de los datos del body y reemplaza la contraseña
     userData = { ...userData, password: hashedPassword };
@@ -73,15 +98,23 @@ export const createRoutes = async (app) => {
   });
 
   app.get('/logout', (req, res) => {
-    // Destruir sesión
-    req.session.destroy((err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send({ errorCode: 500, message: 'Error al cerrar sesión' });
-      } else {
-        console.log('Sesión cerrada');
-        res.send({ message: 'Cerrar sesión' });
-      }
-    });
+    if (!existSession(req)) {
+      res.send({ message: 'No has iniciado sesión.', redirect: '/login' });
+      return;
+    }
+    const result = destroySession(req);
+    res.send(result);
+  });
+
+  app.get('/home', (req, res) => {
+    if (!existSession(req)) {
+          res.send({ message: 'Debes iniciar sesión para acceder a esta página.', redirect: '/login' });
+          return;
+    }
+
+    const sessionData = getSession(req);
+    const message = `Bienvenido a la página principal, ${sessionData.username || 'invitado'}`;
+    res.send({ message, sessionData });
+    return;
   });
 };

@@ -2,26 +2,27 @@
 Todo:
 ----
 
-* Expose server port
-* Validations
+✔ Expose server port
+✔ Validations
 
 
 Endpoints:
 ---------
 
-* /login
 * /forgotPassword
-* /logout
-* /register
+✔ /home
+✔ /logout
+✔ /login
+✔ /register
 
 
 Methods:
 -------
 
-* createSession()
-* destroySession()
-* existSession()
-* getSession()
+✔ createSession()
+✔ destroySession()
+✔ existSession()
+✔ getSession()
 
 
 
