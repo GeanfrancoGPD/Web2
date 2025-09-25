@@ -7,17 +7,17 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  gmail = '';
+  name = '';
   password = '';
   error = '';
 
   constructor(private authService: AuthService) {}
 
   login() {
-    this.authService.login({ gmail: this.gmail, password: this.password })
+    this.authService.login({ name: this.name, password: this.password })
       .subscribe({
         next: (res) => {
           console.log('Login correcto', res);
