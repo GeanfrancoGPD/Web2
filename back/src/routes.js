@@ -1,4 +1,4 @@
-import { SERVER_URL } from './config.js';
+import { SERVER_URL } from '../config.js';
 import bcrypt from 'bcrypt';
 
 export const createRoutes = async (app) => {
@@ -21,17 +21,16 @@ export const createRoutes = async (app) => {
           const passwordMatch = bcrypt.compareSync(userData.password, user.password);
           if (passwordMatch) {
             req.session.data = { username: user.username, email: user.email };
-            console.log('Sesión iniciada');
-            return res.send(`Bienvenido ${user.username}`);
+            return res.send({ message: `Bienvenido ${user.username}` });
           } else {
-            return res.status(401).send('Credenciales inválidas');
+            return res.status(401).send({ errorCode: 401, message: 'Credenciales inválidas' });
           }
         } else {
-          return res.status(404).send('Usuario no encontrado');
+          return res.status(404).send({ errorCode: 404, message: 'Usuario no encontrado' });
         }
     }).catch(error => {
       console.error('Error fetching users:', error);
-      return res.status(500).send('Error fetching users');
+      return res.status(500).send({ errorCode: 500, message: 'Error del servidor' });
     });
 
     req.session.data = userData;
@@ -42,7 +41,7 @@ export const createRoutes = async (app) => {
     let userData = JSON.parse(req.headers.data || '{}');
     const password = userData.password;
     if (!password) {
-      return res.status(400).send('La contraseña es requerida');
+      return res.status(400).send({ errorCode: 400, message: 'La contraseña es obligatoria' });
     }
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     // Copia el resto de los datos del body y reemplaza la contraseña
@@ -61,15 +60,15 @@ export const createRoutes = async (app) => {
         headers: { 'Content-Type': 'application/json', data: JSON.stringify(userData) },
       })
       .then(response => response.text())
-      .then(message => res.send(message))
+      .then(message => res.send({ message }))
       .catch(error => {
         console.error('Error al iniciar sesión:', error);
-        res.status(500).send('Error al iniciar sesión');
+        res.status(500).send({ errorCode: 500, message: 'Error al iniciar sesión' });
       });
     })
     .catch(error => {
       console.error('Error al registrar usuario:', error);
-      res.status(500).send('Error al registrar usuario');
+      res.status(500).send({ errorCode: 500, message: 'Error al registrar usuario' });
     });
   });
 
@@ -78,10 +77,10 @@ export const createRoutes = async (app) => {
     req.session.destroy((err) => {
       if (err) {
         console.error(err);
-        res.status(500).send('Error al cerrar sesión');
+        res.status(500).send({ errorCode: 500, message: 'Error al cerrar sesión' });
       } else {
         console.log('Sesión cerrada');
-        res.send('Cerrar sesión');
+        res.send({ message: 'Cerrar sesión' });
       }
     });
   });

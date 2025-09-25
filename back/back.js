@@ -1,10 +1,10 @@
 import { SERVER_URL } from './config.js';
 
-import app from './middleware.js';
-import { dbConnection } from './db.js';
+import app from './src/middleware.js';
+import { dbConnection } from './src/db.js';
 
-import { createControllers } from './controllers.js';
-import { createRoutes } from './routes.js';
+import { createControllers } from './src/controllers.js';
+import { createRoutes } from './src/routes.js';
 
 dbConnection(app)
   .then(async () => {
