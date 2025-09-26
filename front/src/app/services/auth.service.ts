@@ -13,10 +13,22 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(credentials: { name: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, credentials);
+    return this.http.get(`${this.apiUrl}/login`,{
+      headers: {
+      'Content-Type': 'application/json',
+      data: JSON.stringify(credentials)
+    }} )
   }
 
   register(user: { gmail: string; password: string; name: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, user);
+    return this.http.post(`${this.apiUrl}/register`, user);
+  }
+
+  forgotPass(credentials: { name: string}): Observable<any> {
+    return this.http.get(`${this.apiUrl}/login`,{
+      headers: {
+      'Content-Type': 'application/json',
+      data: JSON.stringify(credentials)
+    }} )
   }
 }

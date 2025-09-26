@@ -15,7 +15,7 @@ export const routes: Routes = [
         title: 'register'
     },
     {
-        path: "forgot-password",
+        path: "forgot",
         component: ForgotPasswodComponent,
         title: "fotgot-password"
 

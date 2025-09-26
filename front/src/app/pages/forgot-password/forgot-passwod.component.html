@@ -1,1 +1,62 @@
-<p>forgot-passwod works!</p>
+<div class="bodyContiner">
+
+  <!-- Paso 1: Email -->
+  <div *ngIf="step === 1">
+    <form [formGroup]="forgotForm" (ngSubmit)="nextStep()">
+      <input type="text" placeholder="Ingrese el correo" formControlName="email">
+
+      <!--Mensajes de error -->
+      <div *ngIf="forgotForm.get('email')?.touched && forgotForm.get('email')?.invalid">
+        <small *ngIf="forgotForm.get('email')?.errors?.['required']">El correo es obligatorio.</small>
+        <small *ngIf="forgotForm.get('email')?.errors?.['email']">Formato de correo inválido.</small>
+        <small *ngIf="forgotForm.get('email')?.errors?.['notGmail']">El correo debe ser de Gmail.</small>
+      </div>
+
+      <button type="submit">Siguiente</button>
+    </form>
+  </div>
+
+  <!-- Paso 2: Codigo -->
+
+  <div *ngIf="step === 2">
+    <form  >
+      <input type="text" placeholder="Codigo de verificacion">
+      <div>
+        <button type="button" (click)="previousStep()">regresar</button>
+        <button type="button" (click)="nextStep()">Siguiente</button>
+      </div>
+      
+    </form>
+  </div>
+
+  <!-- Paso 3: Para password -->
+  <div *ngIf="step === 3">
+    <form [formGroup]="forgotForm">
+      <input type="password" placeholder="Contraseña" formControlName="password">
+      <input type="password" placeholder="Confirmar contraseña" formControlName="confirmPassword">
+
+      <!-- 🚨 Mensajes de error -->
+      <div *ngIf="forgotForm.get('password')?.touched && forgotForm.get('password')?.invalid">
+        <small *ngIf="forgotForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
+        <small *ngIf="forgotForm.get('password')?.errors?.['minlength']">Mínimo 8 caracteres.</small>
+      </div>
+
+      <div *ngIf="forgotForm.errors?.['passwordsMismatch']">
+        <small>Las contraseñas no coinciden.</small>
+      </div>
+
+      <div>
+        <button type="button" (click)="previousStep()">regresar</button>
+        <button type="button" (click)="nextStep()">Siguiente</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Paso 4: Finalizar -->
+  <div *ngIf="step === 4">
+    <form [formGroup]="forgotForm" (ngSubmit)="finish()">
+      <button type="submit">Finalizar</button>
+    </form>
+  </div>
+</div>
