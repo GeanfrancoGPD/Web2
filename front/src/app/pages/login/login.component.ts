@@ -17,15 +17,13 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  login() {
-    this.authService.login({ name: this.name, password: this.password })
-      .subscribe({
-        next: (res) => {
-          console.log('Login correcto', res);
-        },
-        error: (err) => {
-          console.error('Error en login', err);
-        }
+  async login() {
+    this.authService.login({ username: this.name, password: this.password })
+      .then((res) => {
+        console.log('Login correcto', res);
+      })
+      .catch((err) => {
+        console.error('Error en login', err);
       });
   }
 

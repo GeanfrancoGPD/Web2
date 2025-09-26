@@ -17,9 +17,9 @@ export const validateUsername = (value) => {
   if (value && value.length < 6 && value.length > 0) {
     return 'Username must be at least 6 characters long.';
   }
-  if (listUsernames.includes(value)) {
-    return 'Username is already taken.';
-  }
+  // if (listUsernames.includes(value)) {
+  //   return 'Username is already taken.';
+  // }
 
   return '';
 }
@@ -54,15 +54,15 @@ export const validatePassword = (text) => {
 
   if (text.length > 0) {
     if (text.length < 8) {
-      errorText = 'Must have at least 8 characters'
+      errorText = 'Password must have at least 8 characters'
     } else if (!uppercaseRegex.test(text)) {
-      errorText = 'Must contain at least one uppercase letter'
+      errorText = 'Password must contain at least one uppercase letter'
     } else if (!lowercaseRegex.test(text)) {
-      errorText = 'Must contain at least one lowercase letter'
+      errorText = 'Password must contain at least one lowercase letter'
     } else if (!numberRegex.test(text)) {
-      errorText = 'Must contain at least one number'
+      errorText = 'Password must contain at least one number'
     } else if (!symbolRegex.test(text)) {
-      errorText = 'Must contain at least one symbol'
+      errorText = 'Password must contain at least one symbol'
     } else {
       errorText = '';
     }

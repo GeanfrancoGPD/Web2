@@ -19,19 +19,9 @@ export class RegisterComponent {
   constructor(private authService: AuthService) {}
 
   register(){
-    // if (this.password !== this.ConfirmPassword) {
-    //   this.error = 'Las contraseñas no coinciden, Anda a freir Mono';
-    //   return;
-    // }
-
     this.authService.register({username: this.name, email: this.gmail, password: this.password, confirmPassword: this.ConfirmPassword})
-    .subscribe({
-      next: (res) => {
-        console.log('Registro correcto', res);
-      },
-      error: (err) => {
-        console.error('Error en registro', err);
-      }
+    .then((res) => {
+      console.log('Registro', res);
     });
   }
 }

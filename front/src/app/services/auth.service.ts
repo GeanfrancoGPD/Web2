@@ -12,25 +12,32 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: { name: string; password: string }): Observable<any> {
-    return this.http.get(`${this.apiUrl}/login`,{
+  async login(credentials: { username: string; password: string }): Promise<any> {
+    return await fetch(`${this.apiUrl}/login`, {
+      method: 'GET',
       headers: {
       'Content-Type': 'application/json',
       data: JSON.stringify(credentials)
-    }} )
+    }})
   }
 
-  register(user: {username: string; email: string; password: string, confirmPassword: string  }): Observable<any> {
-    console.log(user, this.apiUrl);
-    return this.http.post(`${this.apiUrl}/register`,{
+  async register(userData: {username: string; email: string; password: string, confirmPassword: string  }): Promise<any> {
+    console.log(userData, this.apiUrl);
+    return await fetch(`${this.apiUrl}/register`, {
+      method: 'POST',
       headers: {
       'Content-Type': 'application/json',
-      data: JSON.stringify(user)
-    }});
+      data: JSON.stringify(userData)
+    }})
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error en registro', error);
+    });
   }
 
-  forgotPass(credentials: { name: string}): Observable<any> {
-    return this.http.get(`${this.apiUrl}/login`,{
+  async forgotPass(credentials: { email: string}): Promise<any> {
+    return await fetch(`${this.apiUrl}/forgotPassword`, {
+      method: 'GET',
       headers: {
       'Content-Type': 'application/json',
       data: JSON.stringify(credentials)
