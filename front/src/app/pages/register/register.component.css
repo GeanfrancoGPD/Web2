@@ -6,11 +6,6 @@
   justify-content: flex-end;
   align-items: center;
 
-  background-image: url("../../../assest/fondo.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
   position: relative; /* importante */
   overflow: hidden;   /* evita scroll raro */
 }

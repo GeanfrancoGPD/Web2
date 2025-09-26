@@ -3,3 +3,7 @@
     --cyan: #00A8E8;
     --blue: #0F2C59;
 }
+
+body {
+    background: linear-gradient(130deg, #0F2C59, #E0E0E0, #00A8E8);
+}
