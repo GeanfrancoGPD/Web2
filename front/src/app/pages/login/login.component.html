@@ -8,9 +8,7 @@
         <input type="text" [(ngModel)]="name" name="name" placeholder="username" required />
         <input type="password" [(ngModel)]="password" name="password" placeholder="password" required />
         <div class="forgot-password">
-          <p>
-            olvidaste tu contraseña? <a class="link-register" href="/forgot-password">Restablecer aquí</a>
-          </p>
+             <a class="link-register" (click)="goToForgotPassword(); $event.preventDefault()" style="cursor: pointer;">olvidaste tu contraseña?</a>
         </div>
         <button type="submit">Enter</button>
         <div class="no-account">

@@ -20,8 +20,13 @@ export class AuthService {
     }} )
   }
 
-  register(user: { gmail: string; password: string; name: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+  register(user: {username: string; email: string; password: string, confirmPassword: string  }): Observable<any> {
+    console.log(user, this.apiUrl);
+    return this.http.post(`${this.apiUrl}/register`,{
+      headers: {
+      'Content-Type': 'application/json',
+      data: JSON.stringify(user)
+    }});
   }
 
   forgotPass(credentials: { name: string}): Observable<any> {

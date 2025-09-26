@@ -17,15 +17,13 @@
   </div>
 
   <!-- Paso 2: Codigo -->
-
   <div *ngIf="step === 2">
-    <form  >
-      <input type="text" placeholder="Codigo de verificacion">
+    <form>
+      <input type="text" placeholder="Codigo de verificacion" #verificationCode>
       <div>
         <button type="button" (click)="previousStep()">regresar</button>
         <button type="button" (click)="nextStep()">Siguiente</button>
       </div>
-      
     </form>
   </div>
 
