@@ -214,7 +214,7 @@ export const createRoutes = async (app) => {
     })
     .catch(error => {
       console.error('Error al actualizar la contraseña:', error);
-      res.status(500).send({ errorCode: 500, message: 'Error al actualizar la contraseña' });
+      res.status(500).send({ errorCode: 500, message: 'Error al actualizar la contraseña. El email ingresado no está asociado a ningún usuario registrado.' });
     });
   });
 
