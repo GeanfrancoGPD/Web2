@@ -10,13 +10,18 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+  name = '';
   gmail = '';
   password = ''; 
+  ConfirmPassword = '';
   error = '';
 
   constructor(private authService: AuthService) {}
 
   register(){
-    
+    if (this.password !== this.ConfirmPassword) {
+      this.error = 'Las contraseñas no coinciden';
+      return;
+    }
   }
 }
