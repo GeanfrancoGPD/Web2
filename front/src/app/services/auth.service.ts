@@ -22,7 +22,6 @@ export class AuthService {
   }
 
   async register(userData: {username: string; email: string; password: string, confirmPassword: string  }): Promise<any> {
-    console.log(userData, this.apiUrl);
     return await fetch(`${this.apiUrl}/register`, {
       method: 'POST',
       headers: {
