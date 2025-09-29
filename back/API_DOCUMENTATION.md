@@ -1,8 +1,18 @@
+
 # Documentación de la API
 
 Esta documentación detalla los endpoints disponibles en la API, sus métodos, y los formatos de entrada y salida necesarios para una comunicación correcta con el frontend.
 
-**Advertencia General:** Todos los datos de entrada para los endpoints que los requieren se envían a través de la cabecera `data` como un string JSON.
+**Advertencia General:** Todos los datos de entrada para los endpoints que los requieren se envían a través de la cabecera `data` como un string JSON, o en el body como JSON. Las respuestas incluyen mensajes, códigos de error y redirecciones cuando aplica. El registro y recuperación de contraseña usan validaciones estrictas.
+
+---
+
+## Notas generales
+- Todas las rutas aceptan datos en el body o en el header `data` como JSON.
+- Las respuestas incluyen mensajes, códigos de error y redirecciones cuando aplica.
+- El registro y recuperación de contraseña usan validaciones estrictas.
+
+
 
 ## Endpoints
 
@@ -372,11 +382,10 @@ Busca usuarios que coincidan con los criterios proporcionados.
   **Si por ejemplo un usuario posee un campo {"asd":"123"},**
   **este método conseguirá la coincidencia y lo devolverá**
 
+
 ```IMPORTANTE```
-  **Este endpoint NO devuelve únicamente los datos UN usuario**
+  **Este endpoint NO devuelve únicamente los datos de UN usuario**
   **Devuelve los datos de todos los usuarios con esa coincidencia**
-
-
 
 - **Salida (ÉXITO):** **---------------------------------**
   - **Código:** `200 OK`
