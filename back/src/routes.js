@@ -44,9 +44,11 @@ export const createRoutes = async (app) => {
   });
 
   app.post('/register', async (req, res) => {
+    console.log('Registering user:', req.headers.data);
     let userData = req.body || JSON.parse(req.headers.data || '{}');
     console.log(userData);
     const { username, email, password, confirmPassword } = userData;
+
 
     if (!username || !email || !password || !confirmPassword) {
       return res.status(400).send({ errorCode: 400, message: 'Por favor llene todos los campos', userData});
@@ -82,10 +84,11 @@ export const createRoutes = async (app) => {
     })
     .then(response => response.json())
     .then(async data => {
-      console.log('Usuario registrado:', data);
+      const loginObj = { username, password }; 
+
       await fetch(`${SERVER_URL}/login`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', data: JSON.stringify(userData) },
+        headers: { 'Content-Type': 'application/json', data: JSON.stringify(loginObj) },
       })
       .then(response => response.text())
       .then(message => res.send({ message }))

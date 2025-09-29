@@ -17,8 +17,7 @@ export const routes: Routes = [
     {
         path: "forgot-password",
         component: ForgotPasswodComponent,
-        title: "fotgot-password"
-
+        title: "forgot password"
     }
    
 ];

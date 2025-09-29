@@ -11,36 +11,12 @@ import { OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
   title = 'gestorEventos';
   helloMessage: string = '';
   echoResponse: any;
 
-   constructor(private api: ApiService) {}
+  constructor(private api: ApiService) {}
 
-  ngOnInit(): void {
-    // Llamada GET /api/hello
-    this.api.getHello().subscribe(
-      (res) => {
-        this.helloMessage = res.message;
-      },
-      (err) => {
-        console.error('Error al llamar /api/hello:', err);
-      }
-    );
-  }
-
-  // Función para enviar POST /api/echo
-  sendEcho() {
-    const payload = { name: 'Juan' };
-    this.api.echo(payload).subscribe(
-      (res) => {
-        this.echoResponse = res;
-      },
-      (err) => {
-        console.error('Error al llamar /api/echo:', err);
-      }
-    );
-  }
 
 }

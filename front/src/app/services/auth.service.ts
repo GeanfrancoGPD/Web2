@@ -12,11 +12,34 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: { name: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, credentials);
+  async login(credentials: { username: string; password: string }): Promise<any> {
+    return await fetch(`${this.apiUrl}/login`, {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      data: JSON.stringify(credentials)
+    }})
   }
 
-  register(user: { gmail: string; password: string; name: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, user);
+  async register(userData: {username: string; email: string; password: string, confirmPassword: string  }): Promise<any> {
+    return await fetch(`${this.apiUrl}/register`, {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+      data: JSON.stringify(userData)
+    }})
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error en registro', error);
+    });
+  }
+
+  async forgotPass(credentials: { email: string}): Promise<any> {
+    return await fetch(`${this.apiUrl}/forgotPassword`, {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      data: JSON.stringify(credentials)
+    }} )
   }
 }
