@@ -17,9 +17,9 @@ export const validateUsername = (value) => {
   if (value && value.length < 6 && value.length > 0) {
     return 'Username must be at least 6 characters long.';
   }
-  if (listUsernames.includes(value)) {
-    return 'Username is already taken.';
-  }
+  // if (listUsernames.includes(value)) {
+  //   return 'Username is already taken.';
+  // }
 
   return '';
 }

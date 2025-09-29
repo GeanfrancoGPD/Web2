@@ -17,7 +17,7 @@ export const createRoutes = async (app) => {
       return res.send({ message: `Ya has iniciado sesión. Cierra la sesión para continuar.`, redirect: '/home' });
     }
 
-    const userData = JSON.parse(req.headers.data || '{}');
+    const userData = req.body || JSON.parse(req.headers.data || '{}');
 
     await fetch(`${SERVER_URL}/users`, {
       method: 'GET',
@@ -44,11 +44,12 @@ export const createRoutes = async (app) => {
   });
 
   app.post('/register', async (req, res) => {
-    let userData = JSON.parse(req.headers.data || '{}');
+    let userData = req.body || JSON.parse(req.headers.data || '{}');
+    console.log(userData);
     const { username, email, password, confirmPassword } = userData;
 
     if (!username || !email || !password || !confirmPassword) {
-      return res.status(400).send({ errorCode: 400, message: 'Por favor llene todos los campos' });
+      return res.status(400).send({ errorCode: 400, message: 'Por favor llene todos los campos', userData});
     }
 
     const usernameError = validateUsername(username);
@@ -122,7 +123,7 @@ export const createRoutes = async (app) => {
 
   app.get('/forgotPassword', async (req, res) => {
     // Validar el email que viene en los headers
-    let userData = JSON.parse(req.headers.data || '{}');
+    let userData = req.body || JSON.parse(req.headers.data || '{}');
     const { email } = userData;
     if (!email) {
       return res.status(400).send({ errorCode: 400, message: 'Por favor ingrese su email' });
@@ -171,7 +172,7 @@ export const createRoutes = async (app) => {
 
   app.get('/resetPassword', async (req, res) => {
     // Validar el token que viene en los headers
-    let userData = JSON.parse(req.headers.data || '{}');
+    let userData = req.body || JSON.parse(req.headers.data || '{}');
     const { token, password, confirmPassword, userId } = userData;
     if (!token) {
       return res.status(500).send({ errorCode: 500, message: 'Error del servidor al conseguir el token' });
@@ -220,7 +221,7 @@ export const createRoutes = async (app) => {
 
   app.get('/findUsers', async (req, res) => {
     // Buscar coincidencias de usuarios que contengan por lo menos un dato igual de los que se envían a través de headers.data
-    const userData = JSON.parse(req.headers.data || '{}');
+    const userData = req.body || JSON.parse(req.headers.data || '{}');
     const keys = Object.keys(userData);
     if (keys.length === 0) {
       return res.status(400).send({ errorCode: 400, message: 'Por favor ingrese al menos un criterio de búsqueda' });
