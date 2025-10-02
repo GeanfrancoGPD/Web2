@@ -5,11 +5,13 @@ import { dbConnection } from './src/db.js';
 
 import { createControllers } from './src/controllers.js';
 import { createRoutes } from './src/routes.js';
+import { createSessionRoutes } from './src/session/sessionRoutes.js';
 
 dbConnection(app)
   .then(async () => {
     await createControllers(app);
     await createRoutes(app);
+    await createSessionRoutes(app);
 
   })
   .catch((err) => {

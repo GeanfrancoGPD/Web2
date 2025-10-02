@@ -72,16 +72,5 @@ export const createControllers = async (app) => {
         });
       }
     }
-
-    app.get(`/${model.modelName.toLowerCase()}s`, async (req, res) => {
-      try {
-        const data = await model.find();
-        res.json(data);
-      } catch (error) {
-        const status = errorCodes[error.name] || 500;
-        res.status(status).json({ message: error.message });
-        handleError(error);
-      }
-    });
   });
 };
