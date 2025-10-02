@@ -1,11 +1,12 @@
 /* Form.css - Estilos genéricos para el componente Form */
+@import url("../../../App.css");
 
 .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--background-login);
   padding: 20px;
 }
 
@@ -14,7 +15,7 @@
   max-width: 400px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--form-background-card);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   animation: slideUp 0.6s ease-out;
@@ -33,7 +34,7 @@
 
 .form-title {
   text-align: center;
-  color: #333;
+  color: var(--form-title);
   margin-bottom: 0;
   font-size: 2rem;
   font-weight: 600;
@@ -108,7 +109,7 @@
 }
 
 .form-link {
-  color: #667eea;
+  color: var(--form-color);
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.3s ease;
@@ -117,7 +118,7 @@
 }
 
 .form-link:hover {
-  color: #764ba2;
+  color: var(--form-color-hover);
   background-color: rgba(102, 126, 234, 0.1);
   transform: translateY(-1px);
 }
@@ -153,13 +154,13 @@
 
 /* Estilos para diferentes variantes */
 .form-container.login {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--background-login);
 }
 
 .form-container.register {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: var(--background-register);
 }
 
 .form-container.reset {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: var(--background-reset);
 }
