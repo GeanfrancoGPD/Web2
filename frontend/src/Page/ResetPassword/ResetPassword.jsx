@@ -36,6 +36,7 @@ export default function ResetPassword({ onReset }) {
   const formConfig = {
     title: "Reset Password",
     className: "reset",
+    logo: "/reset.svg",
     inputs: [
       {
         name: "email",
