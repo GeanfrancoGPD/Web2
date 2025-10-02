@@ -1,0 +1,142 @@
+@import "../../App.css";
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Animación borde neón para el botón de login */
+.btn-login {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  width: 70%;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+  background-color: transparent;
+  color: var(--form-color);
+}
+
+.btn-login span.neon-border {
+  position: absolute;
+  display: block;
+}
+.btn-login span.neon-border.top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00c3ff);
+  animation: animate1 1s linear infinite;
+}
+.btn-login span.neon-border.right {
+  top: -100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #00c3ff);
+  animation: animate2 1s linear infinite;
+  animation-delay: 0.25s;
+}
+.btn-login span.neon-border.bottom {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, transparent, #00c3ff);
+  animation: animate3 1s linear infinite;
+  animation-delay: 0.5s;
+}
+.btn-login span.neon-border.left {
+  bottom: -100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #00c3ff);
+  animation: animate4 1s linear infinite;
+  animation-delay: 0.75s;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  background-color: var();
+}
+
+@keyframes animate1 {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+@keyframes animate2 {
+  0% {
+    top: -100%;
+  }
+  50%,
+  100% {
+    top: 100%;
+  }
+}
+@keyframes animate3 {
+  0% {
+    right: -100%;
+  }
+  50%,
+  100% {
+    right: 100%;
+  }
+}
+@keyframes animate4 {
+  0% {
+    bottom: -100%;
+  }
+  50%,
+  100% {
+    bottom: 100%;
+  }
+}
+
+.link-top {
+  margin-top: -2rem;
+  /* margin-bottom: 0.5rem; */
+  text-align: right;
+  width: 50%;
+}
+
+.form-header{
+  margin-bottom: 30px;
+}
