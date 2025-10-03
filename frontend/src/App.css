@@ -3,11 +3,10 @@
   --form-color-hover: #764ba2; */
   --form-color: #111;
   --form-color-hover: #fff;
-  
+
   --form-title: #333;
   --form-background-card: rgba(255, 255, 255, 0.95);
 
-  
   --background-login: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --background-register: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   --background-reset: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);

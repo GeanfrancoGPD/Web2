@@ -140,17 +140,15 @@
 
 /* Estilos para diferentes variantes */
 .form-container.login {
-  backdrop-filter: blur(3px);
+  background: var(--background-login);
 }
 
 .form-container.register {
-  /* background: var(--background-register); */
-  backdrop-filter: blur(3px);
+  background: var(--background-register);
 }
 
 .form-container.reset {
-  /* background: var(--background-reset); */
-  backdrop-filter: blur(3px);
+  background: var(--background-reset);
 }
 
 .form-logo {
