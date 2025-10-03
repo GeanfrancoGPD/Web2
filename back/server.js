@@ -5,19 +5,17 @@ import { dbConnection } from './src/db.js';
 
 import { createControllers } from './src/controllers.js';
 import { createRoutes } from './src/routes.js';
-import { createSessionRoutes } from './src/session/sessionRoutes.js';
 
 dbConnection(app)
   .then(async () => {
     await createControllers(app);
     await createRoutes(app);
-    await createSessionRoutes(app);
 
   })
   .catch((err) => {
     console.log('Error connecting to db ', err);
   });
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.log(err);
 });
