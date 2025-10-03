@@ -134,7 +134,15 @@
   margin-top: -2rem;
   /* margin-bottom: 0.5rem; */
   text-align: right;
-  width: 50%;
+  width: max-content;
+  align-self: flex-start;
+  font-style: italic;
+  font-size: .85rem;
+  padding: .5rem 1rem;
+}
+
+.link-bottom {
+  margin-bottom: -1.5rem;
 }
 
 .form-header{

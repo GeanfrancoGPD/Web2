@@ -67,7 +67,7 @@ export default function Form({
           required={required}
           {...props}
         />
-        <label htmlFor={name}>{label}</label>
+        <label className="form-label-input" htmlFor={name}>{label}</label>
       </span>
     );
   };

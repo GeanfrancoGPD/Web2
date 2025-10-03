@@ -3,14 +3,19 @@
 @import "primereact/resources/primereact.min.css";
 @import "primeicons/primeicons.css";
 
+:root > * {
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: url('../public/background.png') repeat, var(--background-register);
+  background-size: 150px 150px, auto;
 }
 
 code {
