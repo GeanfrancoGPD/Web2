@@ -10,9 +10,7 @@ export default function Password_input({
   placeholder,
   header,
 }) {
-  const defaultHeader = (
-    <div className="font-bold mb-3"> password</div>
-  );
+
   const footer = (
     <>
       <p className="mt-2">Recomendaciones</p>
@@ -32,14 +30,14 @@ export default function Password_input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         toggleMask
-        header={header || defaultHeader}
+        header={header || ''}
         label={label}
         placeholder={placeholder || "********"}
         footer={footer}
-        className="form-input p-inputtext-lg"
+        className="p-inputtext-lg"
         inputClassName="form-input p-inputtext-lg"
       />
-      <label htmlFor={id}>{label}</label>
+      <label className="form-label-input" htmlFor={id}>{label}</label>
     </span>
   );
 }

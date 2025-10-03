@@ -68,6 +68,7 @@ export default function Register({ onRegister }) {
       {
         text: "Already have an account? Log in",
         href: "#",
+        className: "link-bottom",
         onClick: (e) => {
           e.preventDefault();
           console.log("Ir a login");

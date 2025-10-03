@@ -1,6 +1,9 @@
 :root {
-  --form-color: #667eea;
-  --form-color-hover: #764ba2;
+  /* --form-color: #667eea;
+  --form-color-hover: #764ba2; */
+  --form-color: #111;
+  --form-color-hover: #fff;
+  
   --form-title: #333;
   --form-background-card: rgba(255, 255, 255, 0.95);
 

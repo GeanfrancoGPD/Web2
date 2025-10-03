@@ -49,6 +49,7 @@ export default function ResetPassword({ onReset }) {
       {
         text: "Remembered your password? Log in",
         href: "#",
+        className: "link-bottom",
         onClick: (e) => {
           e.preventDefault();
           console.log("Ir a login");
@@ -60,7 +61,7 @@ export default function ResetPassword({ onReset }) {
       {
         text: (
           <>
-            "Send Reset Link"
+            Send Reset Link
             <span className="neon-border top"></span>
             <span className="neon-border right"></span>
             <span className="neon-border bottom"></span>
