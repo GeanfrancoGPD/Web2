@@ -7,7 +7,7 @@ import { sendRecoveryEmail } from '../../services/emailService.js';
 
 export const createSessionRoutes = async (app) => {
 
-  app.get('/login', async (req, res) => {
+  app.post('/login', async (req, res) => {
 
     if (existSession(req, res)) {
       return res.send({ message: `Ya has iniciado sesión. Cierra la sesión para continuar.`, redirect: '/home' });
@@ -21,6 +21,7 @@ export const createSessionRoutes = async (app) => {
     })
     .then(response => response.json())
       .then(async data => {
+        console.log(data)
         const user = data?.find(u => u && u.username === userData.username);
         if (user) {
           const passwordMatch = bcrypt.compareSync(userData.password, user.password);
@@ -165,7 +166,7 @@ export const createSessionRoutes = async (app) => {
     return;
   });
 
-  app.get('/forgotPassword', async (req, res) => {
+  app.post('/forgotPassword', async (req, res) => {
     // Validar el email que viene en los headers
     let userData = req.body || JSON.parse(req.headers.data || '{}');
     const { email } = userData;
@@ -179,12 +180,13 @@ export const createSessionRoutes = async (app) => {
 
     // Busca el usuario con ese email usando findUsers
     const data = await findUsers({ email });
-    if (data?.users?.length > 0) {
+    console.log('Usuarios encontrados: ', data);
+    if (data?.length > 0) {
       // Si se encuentra el usuario, enviar un email con el token de recuperación
-      if (data.users.length > 1) {
+      if (data.length > 1) {
         return res.status(400).send({ errorCode: 400, message: 'Se han encontrado múltiples usuarios con ese email. Por favor contacte al soporte.' });
       }
-      const user = data.users[0];
+      const user = data[0];
       const token = generateToken({ user, email: user.email, userId: user._id });
       // sendRecoveryEmail(user.email, token);
       // res.send({ 
@@ -204,7 +206,7 @@ export const createSessionRoutes = async (app) => {
     }
   });
 
-  app.get('/resetPassword', async (req, res) => {
+  app.post('/resetPassword', async (req, res) => {
     // Validar el token que viene en los headers
     let userData = req.body || JSON.parse(req.headers.data || '{}');
     const { token, password, confirmPassword, userId } = userData;

@@ -1,4 +1,3 @@
-import { load } from "@grpc/proto-loader";
 import { SERVER_URL } from "../config.js";
 
 export const loadData = async () => {
@@ -31,6 +30,19 @@ export const loadData = async () => {
         console.error('Error fetching profiles:', error);
       })
   }
+
+  const printAllUsers = async () => {
+    await fetch(`${SERVER_URL}/users`,
+      { method: 'GET' }
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log('All users:', data);
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
+      })
+  }
   
 
   // Llamadas
@@ -38,6 +50,7 @@ export const loadData = async () => {
   // const profiles = ['administrador de seguridad', 'administrador de eventos', 'participante']
   // await postProfiles(profiles);
   // await printProfiles();
+  await printAllUsers();
 }
 
 loadData();
