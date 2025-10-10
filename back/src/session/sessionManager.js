@@ -87,9 +87,8 @@ export const findUsers = async (userData) => {
   })
   .then(response => response.json())
   .then(data => {
-      const users = data?.filter(u => u && (
-        keys.some(key => userData[key] && u[key] && u[key].includes(userData[key]))
-      ));
-    return { users };
+    return data?.filter(u => u && (
+      keys.some(key => userData[key] && u[key] && u[key].includes(userData[key]))
+    ));
   });
 };
