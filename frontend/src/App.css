@@ -1,15 +1,9 @@
 :root {
-  /* --form-color: #667eea;
-  --form-color-hover: #764ba2; */
-  --form-color: #111;
-  --form-color-hover: #fff;
-
-  --form-title: #333;
+  /* Variables locales opcionales; por defecto delegan en index.css */
+  --form-color: var(--color-primary);
+  --form-color-hover: var(--color-accent);
+  --form-title: var(--color-primary);
   --form-background-card: rgba(255, 255, 255, 0.95);
-
-  --background-login: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --background-register: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --background-reset: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
 .App {
@@ -28,18 +22,18 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: var(--color-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #fff;
 }
 
 .App-link {
-  color: #61dafb;
+  color: var(--color-accent);
 }
 
 @keyframes App-logo-spin {
