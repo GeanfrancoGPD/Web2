@@ -2,13 +2,14 @@ import React from "react";
 import Form from "../../Components/Form/Form";
 import "./ResetPassword.css";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../config";
 
 export default function ResetPassword({ onReset }) {
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
     try {
-      const res = await fetch("http://localhost:5000/auth/reset-password", {
+      const res = await fetch(`${SERVER_URL}/forgotPassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -26,7 +27,7 @@ export default function ResetPassword({ onReset }) {
           onReset(data);
         }
       } else {
-        alert(data.error);
+        alert(JSON.stringify(data));
       }
     } catch (err) {
       console.error(err);

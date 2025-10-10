@@ -2,13 +2,14 @@ import React from "react";
 import Form from "../../Components/Form/Form";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../config";
 
 export default function Register({ onRegister }) {
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
     try {
-      const res = await fetch("http://localhost:5000/auth/register", {
+      const res = await fetch(`${SERVER_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
