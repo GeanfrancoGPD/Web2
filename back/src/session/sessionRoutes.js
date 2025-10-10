@@ -1,7 +1,7 @@
 import { SERVER_URL, profiles } from '../../config.js';
 import bcrypt from 'bcrypt';
 import { validateUsername, validateEmail, validatePassword, validateConfirmPassword } from '../validations.js';
-import { createAndUpdateSession, destroySession, getSession, existSession, setUserProfile } from './sessionManager.js';
+import { createAndUpdateSession, destroySession, getSession, existSession, setUserProfile, findUsers } from './sessionManager.js';
 import { generateToken, verifyToken } from '../../services/tokenManager.js';
 import { sendRecoveryEmail } from '../../services/emailService.js';
 
@@ -177,41 +177,31 @@ export const createSessionRoutes = async (app) => {
       return res.status(400).send({ errorCode: 400, message: emailError });
     }
 
-    // Busca el usuario con ese email usando la ruta /findUsers
-    await fetch(`${SERVER_URL}/findUsers`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json', data: JSON.stringify({ email }) },
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data?.users?.length > 0) {
-        // Si se encuentra el usuario, enviar un email con el token de recuperación
-        if (data.users.length > 1) {
-          return res.status(400).send({ errorCode: 400, message: 'Se han encontrado múltiples usuarios con ese email. Por favor contacte al soporte.' });
-        }
-        const user = data.users[0];
-        const token = generateToken({ user, email: user.email, userId: user._id });
-        // sendRecoveryEmail(user.email, token);
-        // res.send({ 
-        //   message: 'Se ha enviado un email de recuperación',
-        //   userId: user._id,
-        //   email: user.email,
-        //   token,
-        // });
-        res.send({ 
-          message: 'Se ha emulado el envío del email de recuperación',
-          userId: user._id,
-          email: user.email,
-          token,
-        });
-      } else {
-        res.status(404).send({ errorCode: 404, message: 'Usuario no encontrado' });
+    // Busca el usuario con ese email usando findUsers
+    const data = await findUsers({ email });
+    if (data?.users?.length > 0) {
+      // Si se encuentra el usuario, enviar un email con el token de recuperación
+      if (data.users.length > 1) {
+        return res.status(400).send({ errorCode: 400, message: 'Se han encontrado múltiples usuarios con ese email. Por favor contacte al soporte.' });
       }
-    })
-    .catch(error => {
-      console.error('Error al buscar usuario:', error);
-      res.status(500).send({ errorCode: 500, message: 'Error al buscar usuario' });
-    });
+      const user = data.users[0];
+      const token = generateToken({ user, email: user.email, userId: user._id });
+      // sendRecoveryEmail(user.email, token);
+      // res.send({ 
+      //   message: 'Se ha enviado un email de recuperación',
+      //   userId: user._id,
+      //   email: user.email,
+      //   token,
+      // });
+      res.send({ 
+        message: 'Se ha emulado el envío del email de recuperación',
+        userId: user._id,
+        email: user.email,
+        token,
+      });
+    } else {
+      res.status(404).send({ errorCode: 404, message: 'Usuario no encontrado' });
+    }
   });
 
   app.get('/resetPassword', async (req, res) => {
@@ -260,27 +250,6 @@ export const createSessionRoutes = async (app) => {
     .catch(error => {
       console.error('Error al actualizar la contraseña:', error);
       res.status(500).send({ errorCode: 500, message: 'Error al actualizar la contraseña. El email ingresado no está asociado a ningún usuario registrado.' });
-    });
-  });
-
-  app.get('/findUsers', async (req, res) => {
-    // Buscar coincidencias de usuarios que contengan por lo menos un dato igual de los que se envían a través de headers.data
-    const userData = req.body || JSON.parse(req.headers.data || '{}');
-    const keys = Object.keys(userData);
-    if (keys.length === 0) {
-      return res.status(400).send({ errorCode: 400, message: 'Por favor ingrese al menos un criterio de búsqueda' });
-    }
-    
-    await fetch(`${SERVER_URL}/users`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-    .then(response => response.json())
-    .then(data => {
-        const users = data?.filter(u => u && (
-          keys.some(key => userData[key] && u[key] && u[key].includes(userData[key]))
-        ));
-      res.send({ users });
     });
   });
 };

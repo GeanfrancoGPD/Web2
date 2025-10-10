@@ -78,3 +78,18 @@ export const getIdUser = async (username) => {
 //     .catch(err => console.log('Error getting user ID', err));
 //   }, 5000);
 // })();
+
+export const findUsers = async (userData) => {
+  const keys = Object.keys(userData);
+  return await fetch(`${SERVER_URL}/users`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  .then(response => response.json())
+  .then(data => {
+      const users = data?.filter(u => u && (
+        keys.some(key => userData[key] && u[key] && u[key].includes(userData[key]))
+      ));
+    return { users };
+  });
+};
