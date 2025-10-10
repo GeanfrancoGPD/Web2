@@ -1,7 +1,7 @@
-import { SERVER_URL } from '../../config.js';
+import { SERVER_URL, profiles } from '../../config.js';
 import bcrypt from 'bcrypt';
 import { validateUsername, validateEmail, validatePassword, validateConfirmPassword } from '../validations.js';
-import { createAndUpdateSession, destroySession, getSession, existSession } from './sessionManager.js';
+import { createAndUpdateSession, destroySession, getSession, existSession, setUserProfile } from './sessionManager.js';
 import { generateToken, verifyToken } from '../../services/tokenManager.js';
 import { sendRecoveryEmail } from '../../services/emailService.js';
 
@@ -20,13 +20,42 @@ export const createSessionRoutes = async (app) => {
       headers: { 'Content-Type': 'application/json' },
     })
     .then(response => response.json())
-      .then(data => {
+      .then(async data => {
         const user = data?.find(u => u && u.username === userData.username);
         if (user) {
           const passwordMatch = bcrypt.compareSync(userData.password, user.password);
           if (passwordMatch) {
-            createAndUpdateSession(req);
-            return res.send({ message: `Bienvenido ${user.username}` });
+            
+            await fetch(`${SERVER_URL}/userProfiles`, {
+              method: 'GET',
+            })
+            .then(response => response.json())
+            .then(async allUserProfiles => {
+                const userIdProfiles = allUserProfiles.filter(up => up.id_user === user._id);
+
+                await fetch(`${SERVER_URL}/profiles`, {
+                  method: 'GET',
+                })
+                .then(response => response.json())
+                .then(async profiles => {
+                  const userProfiles = userIdProfiles.map(up => {
+                    return profiles.find(p => p._id === up.id_profile)?.name;
+                  });
+
+                  if (userData.activeProfile && userProfiles.includes(userData.activeProfile)) {
+                    createAndUpdateSession(req, userData);
+                    return res.send({ message: `Bienvenido ${userData.activeProfile}, ${user.username}` });
+                  } else if (userProfiles.length > 1) {
+                    return res.send({ 
+                      message: `Seleccione el perfil con el que desea iniciar sesión`,
+                      profiles: userProfiles
+                    });
+                  } else {
+                    createAndUpdateSession(req, userData);
+                    return res.send({ message: `Bienvenido ${userProfiles[0]}, ${user.username}` });
+                  }
+                })
+            });
           } else {
             return res.status(401).send({ errorCode: 401, message: 'Credenciales inválidas' });
           }
@@ -42,6 +71,13 @@ export const createSessionRoutes = async (app) => {
   app.post('/register', async (req, res) => {
     let userData = req.body || JSON.parse(req.headers.data || '{}');
     const { username, email, password, confirmPassword } = userData;
+    const isParticipant = getSession(req)?.activeProfile === profiles.PARTICIPANT.name;
+
+    if (existSession(req, res)) {
+      if (isParticipant) {
+        return res.send({ message: `Ya has iniciado sesión. Cierra la sesión para continuar.`, redirect: '/home' });
+      }
+    }
 
     if (!username || !email || !password || !confirmPassword) {
       return res.status(400).send({ errorCode: 400, message: 'Por favor llene todos los campos', userData});
@@ -68,7 +104,17 @@ export const createSessionRoutes = async (app) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     // Copia el resto de los datos del body y reemplaza la contraseña
-    userData = { ...userData, password: hashedPassword };
+    userData = { 
+      status: 'active',
+      register_date: new Date(),
+      ...userData, 
+      password: hashedPassword };
+      
+    if (isParticipant || !userData.activeProfile) {
+      userData.activeProfile = profiles.PARTICIPANT.name;
+    }
+
+    createAndUpdateSession(req, userData);
 
     await fetch(`${SERVER_URL}/user`, {
       method: 'POST',
@@ -76,8 +122,10 @@ export const createSessionRoutes = async (app) => {
       body: JSON.stringify(userData)
     })
     .then(response => response.json())
-    .then(async data => {
+    .then(async postedUser => {
       const loginObj = { username, password }; 
+
+      await setUserProfile(userData.activeProfile, postedUser._id);
 
       await fetch(`${SERVER_URL}/login`, {
         method: 'GET',
@@ -101,7 +149,7 @@ export const createSessionRoutes = async (app) => {
       res.send({ message: 'No has iniciado sesión.', redirect: '/login' });
       return;
     }
-    const result = await destroySession(req);
+    const result = destroySession(req);
     res.send(result);
   });
 
@@ -112,7 +160,7 @@ export const createSessionRoutes = async (app) => {
     }
 
     const sessionData = getSession(req);
-    const message = `Bienvenido a la página principal, ${sessionData.username || 'invitado'}`;
+    const message = `Bienvenido a la página principal, ${sessionData.activeProfile || 'participante'}, ${sessionData.username || 'invitado'}`;
     res.send({ message, sessionData });
     return;
   });

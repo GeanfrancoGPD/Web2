@@ -2,23 +2,11 @@ export const validateUsername = (value) => {
   // Chequear que la longitud sea mayor a 6 caracteres
   // Chequear que el username no exista en la lista de usernames
 
-  // const username = document.getElementById('username').value;
-  // if (username && username.length < 6) {
-  //   console.log('Username is not valid');
-  //   setPopUpMessage({
-  //     isVisible: true,
-  //     content: 'Username must be at least 6 characters long.',
-  //     buttonText: 'Close',
-  //     onClose: () => setPopUpMessage(prev => ({ ...prev, isVisible: false })),
-  //   });
-  //   return false;
-  // }
-
   if (value && value.length < 6 && value.length > 0) {
-    return 'Username must be at least 6 characters long.';
+    return 'El nombre de usuario debe tener al menos 6 caracteres.';
   }
   // if (listUsernames.includes(value)) {
-  //   return 'Username is already taken.';
+  //   return 'El nombre de usuario ya está en uso.';
   // }
 
   return '';
@@ -30,7 +18,7 @@ export const validateEmail = (email) => {
   const emailRegex = new RegExp('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}');
 
   if (email && email.length > 0 && !emailRegex.test(email)) {
-    return 'Email is not valid';
+    return 'El email no es válido';
   }
   return '';
 }
@@ -54,15 +42,15 @@ export const validatePassword = (text) => {
 
   if (text.length > 0) {
     if (text.length < 8) {
-      errorText = 'Password must have at least 8 characters'
+      errorText = 'La contraseña debe tener al menos 8 caracteres'
     } else if (!uppercaseRegex.test(text)) {
-      errorText = 'Password must contain at least one uppercase letter'
+      errorText = 'La contraseña debe contener al menos una letra mayúscula'
     } else if (!lowercaseRegex.test(text)) {
-      errorText = 'Password must contain at least one lowercase letter'
+      errorText = 'La contraseña debe contener al menos una letra minúscula'
     } else if (!numberRegex.test(text)) {
-      errorText = 'Password must contain at least one number'
+      errorText = 'La contraseña debe contener al menos un número'
     } else if (!symbolRegex.test(text)) {
-      errorText = 'Password must contain at least one symbol'
+      errorText = 'La contraseña debe contener al menos un símbolo'
     } else {
       errorText = '';
     }
@@ -74,7 +62,7 @@ export const validateConfirmPassword = (pass, confirmPass) => {
   // Chequear que la contraseña de confirmación sea igual a la contraseña
 
   if (pass !== confirmPass) {
-    return 'Passwords do not match';
+    return 'Las contraseñas no coinciden';
   }
   return '';
 }

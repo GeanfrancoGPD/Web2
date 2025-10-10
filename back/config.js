@@ -6,3 +6,15 @@ export const config = {
 }
 
 export const SERVER_URL = `${config.PROTOCOL}://${config.SERVER_IP}:${config.PORT}`;
+
+export const profiles = {
+  SECURITY_ADMIN: {
+    name: 'administrador de seguridad'
+  },
+  EVENT_ADMIN: {
+    name: 'administrador de eventos'
+  },
+  PARTICIPANT: {
+    name: 'participante'
+  }
+}
