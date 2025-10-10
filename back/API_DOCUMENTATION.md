@@ -1,414 +1,262 @@
 
-# Documentación de la API
 
-Esta documentación detalla los endpoints disponibles en la API, sus métodos, y los formatos de entrada y salida necesarios para una comunicación correcta con el frontend.
+# Documentación exhaustiva de la API
 
-**Advertencia General:** Todos los datos de entrada para los endpoints que los requieren se envían a través de la cabecera `data` como un string JSON, o en el body como JSON. Las respuestas incluyen mensajes, códigos de error y redirecciones cuando aplica. El registro y recuperación de contraseña usan validaciones estrictas.
+Esta documentación detalla todos los endpoints disponibles, los métodos HTTP soportados, el formato de los datos enviados y recibidos, ejemplos funcionales y posibles respuestas de error.
 
 ---
 
 ## Notas generales
-- Todas las rutas aceptan datos en el body o en el header `data` como JSON.
+- Todos los endpoints aceptan datos en el body (JSON) o en la cabecera `data` como string JSON. `EXCEPTO LOS GET`, que nativamente no admiten parámetros por body.
 - Las respuestas incluyen mensajes, códigos de error y redirecciones cuando aplica.
 - El registro y recuperación de contraseña usan validaciones estrictas.
 
-
+---
 
 ## Endpoints
 
-### 1. Estado de la API
-
-Verifica si la API está en funcionamiento.
-
-- **URL:** `/`
-- **Método:** `GET`
-- **Entrada:** Ninguna.
-- **Salida (Éxito):**
-  - **Código:** `200 OK`
-  - **Cuerpo:** `API is running` (Texto plano)
+### Estado de la API
+**URL:** `/`
+**Método:** `GET`
+**Entrada:** Ninguna.
+**Respuesta:**
+```json
+"API is running"
+```
 
 ---
 
-### 2. Inicio de Sesión
+### Inicio de Sesión
+**URL:** `/login`
+**Método:** `POST`
+**Datos enviados:**
+- Body (JSON):
+  ```json
+  {
+    "username": "nombre_de_usuario",
+    "password": "tu_contraseña",
+    "activeProfile": "nombre_de_perfil" // para seleccionar el perfil cuando el usuario tenga más de un perfil
+  }
+  ```
+- O header `data` como string JSON.
 
-Autentica a un usuario y crea una sesión.
-
-- **URL:** `/login`
-- **Método:** `GET`
-- **Entrada:**
-  - **Cabeceras (Headers):**
-    Un string JSON con las credenciales del usuario.
-    - `data`: 
-      ```json
-      {
-        "username": "nombre_de_usuario",
-        "password": "tu_contraseña"
-      }
-      ```
-
-  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
-  - `data`: ```{
-    "username": "Wisso124214",
-    "password": "QWEqwe123·",
-  }```
-
-
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Bienvenido nombre_de_usuario"
-    }
-    ```
-
-- **Salida (ADVERTENCIA - Sesión existente):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Ya has iniciado sesión. Cierra la sesión para continuar.",
-      "redirect": "/home"
-    }
-    ```
-
-- **Salida (ERRORES):** **---------------------------------**
-  - **Código:** `401 Unauthorized` (Credenciales inválidas)
-    ```json
-    {
-      "errorCode": 401,
-      "message": "Credenciales inválidas"
-    }
-    ```
-  - **Código:** `404 Not Found` (Usuario no encontrado)
-    ```json
-    {
-      "errorCode": 404,
-      "message": "Usuario no encontrado"
-    }
-    ```
-  - **Código:** `500 Internal Server Error`
-    ```json
-    {
-      "errorCode": 500,
-      "message": "Error del servidor"
-    }
-    ```
+**Respuesta (éxito):**
+```json
+{
+  "message": "Bienvenido <perfil>, <username>"
+}
+```
+**Respuesta (varios perfiles):**
+```json
+{
+  "message": "Seleccione el perfil con el que desea iniciar sesión",
+  "profiles": ["participante", "administrador de eventos"]
+}
+```
+**Respuesta (sesión existente):**
+```json
+{
+  "message": "Ya has iniciado sesión. Cierra la sesión para continuar.",
+  "redirect": "/home"
+}
+```
+**Errores:**
+- 401: Credenciales inválidas
+- 404: Usuario no encontrado
+- 500: Error del servidor
 
 ---
 
-### 3. Registro de Usuario
+### Registro de Usuario
+**URL:** `/register`
+**Método:** `POST`
+**Datos enviados:**
+- Body (JSON):
+  ```json
+  {
+    "username": "nuevo_usuario",
+    "email": "correo@ejemplo.com",
+    "password": "tu_contraseña",
+    "confirmPassword": "tu_contraseña",
+    "activeProfile": "participante" // opcional
+  }
+  ```
+- O header `data` como string JSON.
 
-Registra un nuevo usuario en el sistema.
-
-- **URL:** `/register`
-- **Método:** `POST`
-- **Entrada:**
-  - **Cabeceras (Headers):**
-    Un string JSON con los datos del nuevo usuario.
-    - `data`: 
-      ```json
-      {
-        "username": "nuevo_usuario",
-        "email": "correo@ejemplo.com",
-        "password": "tu_contraseña",
-        "confirmPassword": "tu_contraseña"
-      }
-      ```
-
-  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
-  - `data`: ```{
-    "username": "user123",
-    "email": "luisdavidbustosnunez@gmail.com",
-    "password": "QWEqwe123·",
-    "confirmPassword": "QWEqwe123·"
-  }```
-
-
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:** El cuerpo de la respuesta contiene un mensaje que a su vez es un objeto JSON anidado como string, indicando que el inicio de sesión posterior al registro fue exitoso.
-    ```json
-    {
-      "message": "{\"message\":\"Bienvenido nuevo_usuario\"}"
-    }
-    ```
-
-- **Salida (ERRORES):** **---------------------------------**
-  - **Código:** `400 Bad Request` (Campos faltantes o inválidos). El mensaje de error varía según el campo.
-    ```json
-    {
-      "errorCode": 400,
-      "message": "Por favor llene todos los campos"
-    }
-    ```
-    o
-    ```json
-    {
-      "errorCode": 400,
-      "message": "<Mensaje de error de validación específico>"
-    }
-    ```
-  - **Código:** `500 Internal Server Error` (Error durante el registro o el inicio de sesión automático)
-    ```json
-    {
-      "errorCode": 500,
-      "message": "Error al registrar usuario"
-    }
-    ```
-    o
-    ```json
-    {
-      "errorCode": 500,
-      "message": "Error al iniciar sesión"
-    }
-    ```
+**Respuesta (éxito):**
+```json
+{
+  "message": "{\"message\":\"Bienvenido participante, nuevo_usuario\"}"
+}
+```
+**Errores:**
+- 400: Campos faltantes o inválidos
+- 500: Error al registrar usuario / Error al iniciar sesión
 
 ---
 
-### 4. Cierre de Sesión
-
-Cierra la sesión del usuario actual.
-
-- **URL:** `/logout`
-- **Método:** `GET`
-- **Entrada:** Ninguna (la sesión se identifica a través de la cookie de sesión).
-
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Cerrar sesión"
-    }
-    ```
-
-- **Salida (ADVERTENCIA - Sin sesión):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "No has iniciado sesión.",
-      "redirect": "/login"
-    }
-    ```
-
-- **Salida (ERROR):** **---------------------------------**
-  - **Código:** `500 Internal Server Error`
-    ```json
-    {
-      "errorCode": 500,
-      "message": "Error al cerrar sesión"
-    }
-    ```
+### Cierre de Sesión
+**URL:** `/logout`
+**Método:** `GET`
+**Entrada:** Ninguna (la sesión se identifica por cookie).
+**Respuesta (éxito):**
+```json
+{
+  "message": "Sesión cerrada correctamente"
+}
+```
+**Respuesta (sin sesión):**
+```json
+{
+  "message": "No has iniciado sesión.",
+  "redirect": "/login"
+}
+```
+**Errores:**
+- 500: Error al cerrar sesión
 
 ---
 
-### 5. Página de Inicio
-
-Página protegida que requiere una sesión activa.
-
-- **URL:** `/home`
-- **Método:** `GET`
-- **Entrada:** Ninguna (la sesión se identifica a través de la cookie de sesión).
-
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Bienvenido a la página principal, nombre_de_usuario",
-      "sessionData": {
-        "username": "nombre_de_usuario"
-      }
-    }
-    ```
-
-- **Salida (ERROR - Sin sesión):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Debes iniciar sesión para acceder a esta página.",
-      "redirect": "/login"
-    }
-    ```
+### Página Principal
+**URL:** `/home`
+**Método:** `GET`
+**Entrada:** Ninguna (requiere sesión activa).
+**Respuesta (éxito):**
+```json
+{
+  "message": "Bienvenido a la página principal, <perfil>, <username>",
+  "sessionData": { /* datos de sesión */ }
+}
+```
+**Respuesta (sin sesión):**
+```json
+{
+  "message": "Debes iniciar sesión para acceder a esta página.",
+  "redirect": "/login"
+}
+```
 
 ---
 
-### 6. Olvido de Contraseña
+### Olvidé mi contraseña
+**URL:** `/forgotPassword`
+**Método:** `POST`
+**Datos enviados:**
+- Body (JSON):
+  ```json
+  {
+    "email": "usuario@ejemplo.com"
+  }
+  ```
+- O header `data` como string JSON.
 
-Inicia el proceso de recuperación de contraseña para un usuario.
-
-- **URL:** `/forgotPassword`
-- **Método:** `GET`
-- **Entrada:**
-  - **Cabeceras (Headers):**
-    - `data`: Un string JSON con el email del usuario.
-      ```json
-      {
-        "email": "correo@ejemplo.com"
-      }
-      ```
-      
-  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
-  - `data`: ```{
-    "email": "luisdavidbustosnunez@gmail.com",
-  }```
-
-
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Se ha emulado el envío del email de recuperación"
-    }
-    ```
-
-- **Salida (ERRORES):** **---------------------------------**
-  - **Código:** `400 Bad Request` (Email no proporcionado o inválido).
-    ```json
-    {
-      "errorCode": 400,
-      "message": "Por favor ingrese su email"
-    }
-    ```
-  - **Código:** `404 Not Found` (Usuario no encontrado)
-    ```json
-    {
-      "errorCode": 404,
-      "message": "Usuario no encontrado"
-    }
-    ```
-  - **Código:** `500 Internal Server Error`
-    ```json
-    {
-      "errorCode": 500,
-      "message": "Error al buscar usuario"
-    }
-    ```
+**Respuesta (éxito):**
+```json
+{
+  "message": "Se ha emulado el envío del email de recuperación",
+  "userId": "...",
+  "email": "...",
+  "token": "..."
+}
+```
+**Errores:**
+- 400: Email inválido o faltante
+- 404: Usuario no encontrado
+- 500: Error al buscar usuario
 
 ---
 
-### 7. Restablecer Contraseña
+### Restablecer contraseña
+**URL:** `/resetPassword`
+**Método:** `POST`
+**Datos enviados:**
+- Body (JSON):
+  ```json
+  {
+    "userId": "id_del_usuario",
+    "token": "token_de_recuperacion",
+    "password": "nueva_contraseña",
+    "confirmPassword": "nueva_contraseña"
+  }
+  ```
+- O header `data` como string JSON.
 
-Restablece la contraseña de un usuario utilizando un token de recuperación.
-
-- **URL:** `/resetPassword`
-- **Método:** `GET`
-- **Entrada:**
-  - **Cabeceras (Headers):**
-    - `data`: Un string JSON con el token, la nueva contraseña y el ID del usuario.
-      ```json
-      {
-        "userId": "id_del_usuario",
-        "token": "token_de_recuperacion",
-        "password": "nueva_contraseña",
-        "confirmPassword": "nueva_contraseña",
-      }
-      ```
-
-      
-  **EJEMPLO FUNCIONAL  (debe enviarse como string)**
-  - `data`: ```{
-    "userId":"68d29510ae0ee799136de05d",
-    "password":"QWEqwe123·",
-    "confirmPassword":"QWEqwe123·",
-    "token":"...",  (requiere un token válido)
-  }```
-
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
-    {
-      "message": "Contraseña actualizada correctamente para el usuario . Por favor inicie sesión con su nueva contraseña.",
-      "redirect": "/login"
-    }
-    ```
-- **Salida (ERRORES):** **---------------------------------**
-  - **Código:** `400 Bad Request` (Campos faltantes, contraseñas no coinciden o token inválido).
-    ```json
-    {
-      "errorCode": 400,
-      "message": "<Mensaje de error específico>"
-    }
-    ```
-  - **Código:** `500 Internal Server Error`
-    ```json
-    {
-      "errorCode": 500,
-      "message": "Error al actualizar la contraseña"
-    }
-    ```
+**Respuesta (éxito):**
+```json
+{
+  "message": "Contraseña actualizada correctamente para el usuario . Por favor inicie sesión con su nueva contraseña.",
+  "redirect": "/login"
+}
+```
+**Errores:**
+- 400: Campos faltantes, contraseñas no coinciden, token inválido
+- 500: Error al actualizar la contraseña
 
 ---
 
-### 8. Buscar Usuarios
+### Rutas CRUD automáticas (por modelo)
+El archivo `src/controllers.js` genera endpoints CRUD para cada modelo exportado desde `models.js`.
 
-Busca usuarios que coincidan con los criterios proporcionados.
+#### Ejemplo para el modelo `User`:
+- **GET** `/users` — Listar todos los usuarios
+- **GET** `/user/:id` — Obtener usuario por id
+- **POST** `/user` — Crear usuario
+- **PUT** `/user/:id` — Actualizar usuario por id
+- **DELETE** `/users` — Eliminar todos los usuarios
+- **DELETE** `/user/:id` — Eliminar usuario por id
 
-- **URL:** `/findUsers`
-- **Método:** `GET`
-- **Entrada:**
-  - **Cabeceras (Headers):**
-    - `data`: Un string JSON con uno o más criterios de búsqueda. La búsqueda es parcial (usa `includes`).
-      ```json
-      {
-        "username": "user",
-        "..."
-      }
-      ó
-      {
-        "email": "ejemplo.com",
-        "..."
-      }      
-      ```
+#### Formato de datos enviados:
+- **POST/PUT:** Body (JSON) con los campos del modelo
 
-**EJEMPLO FUNCIONAL  (debe enviarse como string)**
-  - `data`: ```{
-    "email": "luisdavidbustosnunez@gmail.com",
-  }```
-
-```COMENTARIO```
-  **Este método puede buscar cualquier propiedad de un usuario**
-  **Si por ejemplo un usuario posee un campo {"asd":"123"},**
-  **este método conseguirá la coincidencia y lo devolverá**
-
-
-```IMPORTANTE```
-  **Este endpoint NO devuelve únicamente los datos de UN usuario**
-  **Devuelve los datos de todos los usuarios con esa coincidencia**
-
-- **Salida (ÉXITO):** **---------------------------------**
-  - **Código:** `200 OK`
-  - **Cuerpo:**
-    ```json
+#### Formato de respuesta:
+- **GET (listado):**
+  ```json
+  [
     {
-      "users": [
-        {
-          "_id": "...",
-          "username": "user123",
-          "email": "test@ejemplo.com",
-          "password": "...",
-          "..."
-        }
-      ]
+      "_id": "...",
+      "username": "...",
+      "email": "...",
+      // ...otros campos
     }
-    ```
-    
-- **Salida (ERROR):** **---------------------------------**
-  - **Código:** `400 Bad Request` (Sin criterios de búsqueda).
-    ```json
-    {
-      "errorCode": 400,
-      "message": "Por favor ingrese al menos un criterio de búsqueda"
-    }
-    ```
+  ]
+  ```
+- **GET (por id):**
+  ```json
+  {
+    "_id": "...",
+    "username": "...",
+    "email": "...",
+    // ...otros campos
+  }
+  ```
+- **POST/PUT:**
+  ```json
+  {
+    "message": "Usuario creado/actualizado correctamente",
+    "user": { /* datos del usuario */ }
+  }
+  ```
+- **DELETE:**
+  ```json
+  {
+    "message": "Usuario(s) eliminado(s) correctamente"
+  }
+  ```
+
+#### Errores comunes:
+- 400: ValidationError (campos inválidos)
+- 401: UnauthorizedError
+- 403: ForbiddenError
+- 404: NotFoundError
+- 406: NoDataError
+- 500: InternalServerError
+
+#### Otros modelos
+Las mismas rutas y formatos aplican para los modelos `Profile`, `Subsystem`, `Class`, `Method`, `Menu`, etc. Los nombres de las rutas se derivan de `model.modelName.toLowerCase()`.
+
+---
+
+## Observaciones finales
+- Todos los endpoints aceptan datos en el body (JSON) o en la cabecera `data` como string JSON.
+- Las respuestas pueden incluir mensajes, redirecciones y códigos de error.
+- Los endpoints de sesión y recuperación usan validaciones estrictas.
