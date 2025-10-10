@@ -45,6 +45,18 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+## Theming (colores de la app)
+
+Los colores globales se definen como variables CSS en `src/index.css` dentro de `:root`:
+
+- `--color-primary`: color principal (actual: `#0F2C59`)
+- `--color-bg`: color de fondo general (actual: `#E0E0E0`)
+- `--color-accent`: color de acento/acción (actual: `#00A8E8`)
+
+Los estilos existentes usan alias como `--form-color`, `--form-title` y fondos `--background-login/register/reset` que ya referencian la paleta. Ajusta estos valores para cambiar el tema en toda la app.
+
+Sugerencia: para soportar modo oscuro, puedes sobreescribir las variables bajo una clase `.dark` o usando `@media (prefers-color-scheme: dark)`.
+
 ### Code Splitting
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
