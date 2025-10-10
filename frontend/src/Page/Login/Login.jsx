@@ -2,12 +2,13 @@ import React from "react";
 import Form from "../../Components/Form/Form";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../config";
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate();
   const handleSubmit = async (formData) => {
     try {
-      const res = await fetch("http://localhost:5000/auth/login", {
+      const res = await fetch(`${SERVER_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
