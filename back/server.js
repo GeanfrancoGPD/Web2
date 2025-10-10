@@ -16,6 +16,6 @@ dbConnection(app)
     console.log('Error connecting to db ', err);
   });
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.log(err);
 });

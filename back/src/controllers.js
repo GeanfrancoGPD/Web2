@@ -20,7 +20,7 @@ export const createControllers = async (app) => {
       get: [`/${model.modelName.toLowerCase()}s`, `/${model.modelName.toLowerCase()}/:id`],
       post: [`/${model.modelName.toLowerCase()}`],
       put: [`/${model.modelName.toLowerCase()}/:id`],
-      delete: [`/${model.modelName.toLowerCase()}/:id`]
+      delete: [`/${model.modelName.toLowerCase()}s`, `/${model.modelName.toLowerCase()}/:id`]
     };
 
     const getId = (req) => req.params.id;
@@ -40,7 +40,13 @@ export const createControllers = async (app) => {
         case 'put':
           return await model.findByIdAndUpdate(getId(req), req.body, { new: true });
         case 'delete':
-          return await model.findByIdAndDelete(getId(req));
+          if (!req.params.id) {
+            const items = await model.find();
+            await Promise.all(items.map(item => model.findByIdAndDelete(item._id)));
+            return { deletedCount: items.length };
+          } else {
+            return await model.findByIdAndDelete(getId(req));
+          }
         default:
           throw new Error('Method not supported');
       }
@@ -72,16 +78,5 @@ export const createControllers = async (app) => {
         });
       }
     }
-
-    app.get(`/${model.modelName.toLowerCase()}s`, async (req, res) => {
-      try {
-        const data = await model.find();
-        res.json(data);
-      } catch (error) {
-        const status = errorCodes[error.name] || 500;
-        res.status(status).json({ message: error.message });
-        handleError(error);
-      }
-    });
   });
 };
