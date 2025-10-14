@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { load } from "@grpc/proto-loader";
+>>>>>>> 68f7f96574ec336f081a010ad560ac12549b61e8
 import { SERVER_URL } from "../config.js";
 
 export const loadData = async () => {
@@ -30,6 +34,7 @@ export const loadData = async () => {
         console.error('Error fetching profiles:', error);
       })
   }
+<<<<<<< HEAD
 
   const printAllUsers = async () => {
     await fetch(`${SERVER_URL}/users`,
@@ -43,6 +48,8 @@ export const loadData = async () => {
         console.error('Error fetching users:', error);
       })
   }
+=======
+>>>>>>> 68f7f96574ec336f081a010ad560ac12549b61e8
   
 
   // Llamadas
@@ -50,7 +57,10 @@ export const loadData = async () => {
   // const profiles = ['administrador de seguridad', 'administrador de eventos', 'participante']
   // await postProfiles(profiles);
   // await printProfiles();
+<<<<<<< HEAD
   await printAllUsers();
+=======
+>>>>>>> 68f7f96574ec336f081a010ad560ac12549b61e8
 }
 
 loadData();
