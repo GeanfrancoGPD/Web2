@@ -1,0 +1,53 @@
+@import "../../App.css";
+/* ProfileSelection.css */
+
+.profile-selection-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* 👈 Más alto que el login */
+}
+
+.profile-selection-card {
+  background: var(--form-background-card);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 30vw;
+  min-width: 320px;
+  text-align: center;
+  color: var(--form-title);
+  animation: fadeIn 0.3s ease;
+}
+
+.profile-selection-card ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.profile-selection-card li {
+  margin-bottom: 0.1rem;
+}
+
+.profile-selection-card button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--form-color);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profile-selection-card button:hover {
+  background-color: var(--form-color-hover);
+}
+

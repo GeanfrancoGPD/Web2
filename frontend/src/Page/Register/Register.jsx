@@ -26,7 +26,7 @@ export default function Register({ onRegister }) {
           onRegister(data);
         }
       } else {
-        alert(data.error);
+        alert(data.error || "Ha ocurrido un error durante la operacion");
       }
     } catch (err) {
       console.error(err);

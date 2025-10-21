@@ -4,6 +4,7 @@ import Login from "./Page/Login/Login";
 import Register from "./Page/Register/Register";
 import ResetPassword from "./Page/ResetPassword/ResetPassword";
 import Loader from "./Components/Loader/Loader";
+import Home from "./Page/Home/Home"
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/Home" element={<Home />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
       </Routes>
