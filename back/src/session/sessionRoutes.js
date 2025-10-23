@@ -21,7 +21,6 @@ export const createSessionRoutes = async (app) => {
     })
     .then(response => response.json())
       .then(async data => {
-        console.log(data)
         const user = data?.find(u => u && u.username === userData.username);
         if (user) {
           const passwordMatch = bcrypt.compareSync(userData.password, user.password);
@@ -180,7 +179,6 @@ export const createSessionRoutes = async (app) => {
 
     // Busca el usuario con ese email usando findUsers
     const data = await findUsers({ email });
-    console.log('Usuarios encontrados: ', data);
     if (data?.length > 0) {
       // Si se encuentra el usuario, enviar un email con el token de recuperación
       if (data.length > 1) {

@@ -19,6 +19,7 @@ export default function Password_input({
         <li>Al menos una mayúscula</li>
         <li>Al menos un número</li>
         <li>Mínimo 8 caracteres</li>
+        <li>Al menos un carácter especial</li>
       </ul>
     </>
   );
