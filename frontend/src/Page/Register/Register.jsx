@@ -16,6 +16,7 @@ export default function Register({ onRegister }) {
       });
 
       const data = await res.json();
+      if (data.errorCode) console.log(data)
       if (res.ok) {
         console.log("✅ Registro exitoso", data);
         navigate("/");

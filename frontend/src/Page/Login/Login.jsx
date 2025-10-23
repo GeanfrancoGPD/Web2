@@ -19,6 +19,7 @@ export default function Login({ onLogin }) {
       });
 
       const data = await res.json();
+      if (data.errorCode) console.log(data)
       if (res.ok) {
         console.log("✅ Login exitoso", data);
 
